@@ -1,44 +1,47 @@
-# Commute Weather Risk Advisor
+# Commute Weather Risk Advisor API
 
-This project is a backend service that helps commuters decide whether it’s a good idea to leave at their planned time, or adjust their departure to avoid bad weather conditions like heavy rain, strong winds, or poor visibility.
+A backend service that analyzes hourly weather + air quality forecasts and provides a **Commute Weather Risk Score (0–100)** along with a recommended departure time.
 
-The API fetches an hourly weather forecast and generates:
-
-- a Weather Risk Score (0–100)
-- a short explanation of what caused the risk
-- a suggested safer departure time (if needed)
+This project helps commuters avoid leaving during risky conditions such as heavy rain, strong winds, low visibility, or unhealthy air quality.
 
 ---
 
-## What this service does
+## Features
 
-Given:
+- REST API endpoint: **POST /commute-advice**
+- Hourly weather forecast integration (Open-Meteo)
+- Deterministic and explainable **Weather Risk Score (0–100)**
+- Departure-time recommendation engine (checks safer windows)
+- Full reason + breakdown output
 
-- home coordinates
-- office coordinates
-- planned departure time
-- commute duration
+### Bonus Extensions Included
 
-The service:
+- **Bonus A: Weather API Caching**
+  - Forecast results are cached for ~10 minutes per location
+  - Response includes `"cache_status": "HIT"` or `"MISS"`
 
-1. pulls hourly forecast data using the Open-Meteo public API  
-2. checks weather conditions during the commute window  
-3. calculates a deterministic risk score  
-4. recommends the best departure time within the next few hours  
+- **Bonus B: Structured Risk Breakdown**
+  - Risk score is broken down by contributing factors:
+    - AQI
+    - Rain
+    - Wind
+    - Visibility
 
 ---
 
-## Tech used
+## Tech Stack
 
-- Python 3
-- FastAPI (REST API framework)
-- Uvicorn (server)
-- httpx (API requests)
-- Open-Meteo (free weather forecast provider)
+- Python 3.10+
+- FastAPI
+- Uvicorn
+- HTTPX (API requests)
+- Open-Meteo Weather + AQI APIs
 
 ---
 
 ## Setup (run locally)
+Requirements: Python 3.10 or above
+Note: `.venv/` is ignored via `.gitignore` and should not be committed.
 
 ## 1.Clone the repository
 ```
@@ -79,38 +82,77 @@ Server runs at:
 
 `POST /commute-advice`
 
-## Example curl request
-```curl -X POST "http://127.0.0.1:8000/commute-advice" \
+## Example Request
+Run in a new terminal (while server is running):
+```bash
+curl -X POST "http://127.0.0.1:8000/commute-advice" \
 -H "Content-Type: application/json" \
 -d '{
-  "home": {"latitude": 12.9352, "longitude": 77.6245},
-  "office": {"latitude": 12.9698, "longitude": 77.7500},
+  "home": {
+    "latitude": 12.9352,
+    "longitude": 77.6245
+  },
+  "office": {
+    "latitude": 12.9698,
+    "longitude": 77.7500
+  },
   "planned_departure": "2026-02-01T19:00:00",
   "duration_minutes": 90
 }'
+
 ```
+## Example Response
+``` {
+  "risk_score": 15,
+  "cache_status": "MISS",
+  "recommendation": "No change needed — planned departure is already the safest option.",
+  "recommended_departure": "2026-02-01T19:00:00",
+  "reason": [
+    "Air quality is moderate (AQI 72)"
+  ],
+  "risk_breakdown": {
+    "AQI": 15,
+    "rain": 0,
+    "wind": 0,
+    "visibility": 0
+  },
+  "weather_snapshot": {
+    "checked_options": [...], //checked_options truncated in README output
+    "aqi_value": 72
+  }
+}
+```
+
+# API Documentation
+FastAPI automatically provides Swagger UI:
+```http://127.0.0.1:8000/docs
+```
+
 ---
 
-# Risk scoring logic
-
-The score ranges from 0 (safe) to 100 (very risky).
-
-The current scoring rules are:
-
-- +45 if rain probability is above 60%
-- +20 if wind speed is above 25 km/h
-- +10 if visibility drops below 2000 m
-Each response includes a breakdown so it’s clear where the score comes from.
+## Risk Scoring Logic
+The total risk score is computed deterministically:
+| Condition              | Score Added |
+| ---------------------- | ----------- |
+| AQI ≥ 150              | +60         |
+| AQI ≥ 100              | +45         |
+| AQI ≥ 50               | +15         |
+| Rain probability > 60% | +45         |
+| Rain probability > 30% | +20         |
+| Wind speed > 25 km/h   | +20         |
+| Wind speed > 15 km/h   | +10         |
+| Visibility < 2000 m    | +10         |
 
 ---
 
-# Departure recommendation
+## Departure recommendation logic
 
-Instead of only checking the planned time, the service also looks at nearby departure options (up to the next 3 hours).
+The system checks multiple departure options:
+- Planned time
+- 30 min earlier
+- 30–180 min later
 
-It selects the departure time with the lowest risk score.
-
-If all times have the same risk, it simply recommends leaving as planned.
+The lowest-risk departure is recommended.
 
 ---
 
@@ -124,10 +166,10 @@ If all times have the same risk, it simply recommends leaving as planned.
 
 ## If I had one extra day, I would probably add:
 
-- caching weather responses to reduce API calls
-- AQI/pollution-based risk scoring
-- unit tests + CI pipeline
-- deployment on Render/Railway for a live demo
+- More advanced route-based forecasting (multiple points between home & office)
+- Persistent caching (Redis)
+- Unit testing for scoring + recommendation logic
+- Deployment support (Docker + cloud hosting)
 
 ---
 

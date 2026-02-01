@@ -1,17 +1,23 @@
 from datetime import datetime, timedelta
+
 from app.weather import extract_commute_window
 from app.risk import calculate_risk
 
 
-def find_best_departure(hourly_data, planned_departure: str, duration_minutes: int):
+def find_best_departure(hourly_data, planned_departure: str, duration_minutes: int, aqi=None):
     """
-    Checks multiple departure windows within the next 3 hours
-    and returns the lowest-risk departure time.
+    Departure Recommendation Engine
+
+    Checks multiple departure options within the next 3 hours
+    and selects the departure time with the lowest weather risk score.
+
+    Bonus Support:
+    - AQI risk is included in scoring if provided.
     """
 
     planned_dt = datetime.fromisoformat(planned_departure)
 
-    # Candidate offsets (minutes)
+    
     candidate_offsets = [0, -30, 30, 60, 90, 120, 180]
 
     best_option = None
@@ -20,7 +26,7 @@ def find_best_departure(hourly_data, planned_departure: str, duration_minutes: i
     for offset in candidate_offsets:
         candidate_dt = planned_dt + timedelta(minutes=offset)
 
-        # Extract forecast window
+        
         snapshot = extract_commute_window(
             hourly_data,
             candidate_dt.isoformat(),
@@ -30,8 +36,8 @@ def find_best_departure(hourly_data, planned_departure: str, duration_minutes: i
         if not snapshot:
             continue
 
-        # Calculate risk score
-        score, breakdown, reasons = calculate_risk(snapshot)
+        
+        score, breakdown, reasons = calculate_risk(snapshot, aqi=aqi)
 
         results.append({
             "departure": candidate_dt,
@@ -40,7 +46,7 @@ def find_best_departure(hourly_data, planned_departure: str, duration_minutes: i
             "reasons": reasons
         })
 
-        # Choose best option (lowest score)
+        
         if best_option is None or score < best_option["score"]:
             best_option = {
                 "departure": candidate_dt,
@@ -49,7 +55,7 @@ def find_best_departure(hourly_data, planned_departure: str, duration_minutes: i
                 "reasons": reasons
             }
 
-        # Tie-breaker: prefer planned departure if equal score
+        
         elif score == best_option["score"]:
             if candidate_dt == planned_dt:
                 best_option = {
@@ -59,5 +65,4 @@ def find_best_departure(hourly_data, planned_departure: str, duration_minutes: i
                     "reasons": reasons
                 }
 
-    # ALWAYS return tuple
     return best_option, results

@@ -7,36 +7,32 @@ class Location(BaseModel):
     longitude: float = Field(..., example=77.6245)
 
 
+
 class CommuteRequest(BaseModel):
     home: Location
     office: Location
 
     planned_departure: str = Field(
         ...,
-        example="2026-01-10T08:30:00",
+        example="2026-02-01T19:00:00",
         description="Planned departure time in ISO format"
     )
 
     duration_minutes: Optional[int] = Field(
         45,
-        example=45,
-        description="Commute duration in minutes (default: 45)"
+        example=90,
+        description="Commute duration in minutes"
     )
 
-
-class WeatherSnapshotHour(BaseModel):
-    time: str
-    rain_prob: int
-    wind_kmh: float
 
 
 class CommuteResponse(BaseModel):
     risk_score: int
+    cache_status: str
+
     recommendation: str
     recommended_departure: Optional[str]
 
     reason: List[str]
-
     risk_breakdown: Dict[str, int]
     weather_snapshot: Dict[str, Any]
-    
