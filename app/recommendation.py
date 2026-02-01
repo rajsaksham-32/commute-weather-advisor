@@ -59,5 +59,5 @@ def find_best_departure(hourly_data, planned_departure: str, duration_minutes: i
                     "reasons": reasons
                 }
 
-    # ✅ ALWAYS return tuple
+    # ALWAYS return tuple
     return best_option, results
