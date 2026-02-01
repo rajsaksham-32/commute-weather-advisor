@@ -38,82 +38,57 @@ The service:
 
 ---
 
-## Folder structure
-
-commute-weather-advisor/
-│
-├── app/
-│ ├── main.py # API entry point
-│ ├── models.py # Request/response models
-│ ├── weather.py # Weather forecast integration
-│ ├── risk.py # Risk scoring rules
-│ ├── recommendation.py # Departure time suggestion logic
-│
-├── requirements.txt
-└── README.md
-
----
-
 
 ---
 
 ## Setup (run locally)
 
-### 1. Clone the repo
-
-```bash
-git clone https://github.com/<your-username>/commute-weather-advisor.git
+## 1.Clone the repository
+```
+git clone https://github.com/rajsaksham-32/commute-weather-advisor.git
 cd commute-weather-advisor
 
-#Create a virtual environment
-python3 -m venv .venv
+```
 
-#Activate it
+## 2. Create and activate a virtual environment
+```
+python3 -m venv .venv
 source .venv/bin/activate
 
-#Start the server
+```
+
+## 3. Install dependencies
+```
+pip install -r requirements.txt
+
+```
+
+## 4. Run the server
+```
 uvicorn app.main:app --reload
 
-## The API will run at:
-http://127.0.0.1:8000
+```
+Server runs at:
+- http://127.0.0.1:8000
 
-# Interactive Swagger docs:
-http://127.0.0.1:8000/docs
+- Swagger docs:
+    -- http://127.0.0.1:8000/docs
 
-API Endpoint
+## API Usage
+**Endpoint**
 POST /commute-advice
 
-This endpoint returns the weather risk score and a departure recommendation.
-
-#Example request
-{
-  "home": {
-    "latitude": 12.9352,
-    "longitude": 77.6245
-  },
-  "office": {
-    "latitude": 12.9698,
-    "longitude": 77.7500
-  },
+## Example curl request
+```curl -X POST "http://127.0.0.1:8000/commute-advice" \
+-H "Content-Type: application/json" \
+-d '{
+  "home": {"latitude": 12.9352, "longitude": 77.6245},
+  "office": {"latitude": 12.9698, "longitude": 77.7500},
   "planned_departure": "2026-02-01T19:00:00",
   "duration_minutes": 90
-}
-
-#Example response
-{
-  "risk_score": 45,
-  "recommendation": "Better weather expected if you leave at 20:00",
-  "recommended_departure": "2026-02-01T20:00:00",
-  "reason": [
-    "High rain probability (75%) during commute window"
-  ],
-  "risk_breakdown": {
-    "rain": 45,
-    "wind": 0,
-    "visibility": 0
-  }
-}
+}'
 ```
+---
 
 # Risk scoring logic
 
