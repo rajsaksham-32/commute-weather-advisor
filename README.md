@@ -1,4 +1,4 @@
-# Commute Weather Risk Advisor 🚲🌦️
+# Commute Weather Risk Advisor
 
 This project is a backend service that helps commuters decide whether it’s a good idea to leave at their planned time, or adjust their departure to avoid bad weather conditions like heavy rain, strong winds, or poor visibility.
 
@@ -157,7 +157,7 @@ If all times have the same risk, it simply recommends leaving as planned.
 
 ## Author
 
-Hi, I’m **Saksham Raj** 👋
+Hi, I’m **Saksham Raj** 
 I’m a Computer Science student with a strong interest in **AI and Machine Learning**, along with backend development.
 
 I enjoy working on projects that combine real-world data, clean API design, and practical problem solving.
