@@ -38,9 +38,6 @@ The service:
 
 ---
 
-
----
-
 ## Setup (run locally)
 
 ## 1.Clone the repository
