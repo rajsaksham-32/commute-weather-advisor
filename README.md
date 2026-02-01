@@ -1,5 +1,10 @@
 # Commute Weather Risk Advisor API
 
+![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green?logo=fastapi&logoColor=white)
+![Uvicorn](https://img.shields.io/badge/Uvicorn-ASGI-orange)
+![OpenMeteo](https://img.shields.io/badge/Open--Meteo-WeatherAPI-lightblue)
+
 A backend service that analyzes hourly weather + air quality forecasts and provides a **Commute Weather Risk Score (0–100)** along with a recommended departure time.
 
 This project helps commuters avoid leaving during risky conditions such as heavy rain, strong winds, low visibility, or unhealthy air quality.
