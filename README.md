@@ -40,7 +40,7 @@ This project helps commuters avoid leaving during risky conditions such as heavy
 ---
 
 ## Setup (run locally)
-Requirements: Python 3.10 or above
+Requirements: Python 3.10 or above  
 Note: `.venv/` is ignored via `.gitignore` and should not be committed.
 
 ## 1.Clone the repository
