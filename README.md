@@ -31,7 +31,7 @@ This project helps commuters avoid leaving during risky conditions such as heavy
 
 ## Tech Stack
 
-- Python 3.10+
+- Python 3.12.3
 - FastAPI
 - Uvicorn
 - HTTPX (API requests)
@@ -44,7 +44,7 @@ Requirements: Python 3.10 or above
 Note: `.venv/` is ignored via `.gitignore` and should not be committed.
 
 ## 1.Clone the repository
-```
+```bash
 git clone https://github.com/rajsaksham-32/commute-weather-advisor.git
 cd commute-weather-advisor
 
@@ -143,7 +143,7 @@ The total risk score is computed deterministically:
 | Wind speed > 25 km/h   | +20         |
 | Wind speed > 15 km/h   | +10         |
 | Visibility < 2000 m    | +10         |
-
+Final score is capped at **100**.
 ---
 
 ## Departure recommendation logic
@@ -160,8 +160,9 @@ The lowest-risk departure is recommended.
 # Assumptions
 
 - Forecast is fetched using the home/start location
-- No database is used (everything is calculated live)
-- Recommendation logic is kept simple and explainable
+- Office coordinates are accepted but not yet used for route-based sampling
+- Caching is in-memory (resets when server restarts)
+- Recommendation logic is simple but deterministic and explainable
 
 ---
 
