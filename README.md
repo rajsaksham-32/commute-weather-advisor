@@ -1,4 +1,4 @@
-# Commute Weather Risk Advisor API
+# Commute Weather Risk Advisor 
 
 ![Python](https://img.shields.io/badge/Python-3.10%2B-blue?logo=python&logoColor=white)
 ![FastAPI](https://img.shields.io/badge/FastAPI-Backend-green?logo=fastapi&logoColor=white)
