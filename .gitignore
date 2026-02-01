@@ -1,0 +1,12 @@
+# Virtual environment (do not upload)
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+
+# Environment variables
+.env
+
+# OS junk files
+.DS_Store
