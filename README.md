@@ -65,6 +65,9 @@ pip install -r requirements.txt
 uvicorn app.main:app --reload
 
 ```
+The server will keep running in **this terminal**.  
+**Open a second terminal window/tab to send API requests (curl/Postman)**.
+
 Server runs at:
 - http://127.0.0.1:8000
 
