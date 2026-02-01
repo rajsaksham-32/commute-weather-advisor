@@ -72,8 +72,9 @@ Server runs at:
     -- http://127.0.0.1:8000/docs
 
 ## API Usage
-**Endpoint**
-POST /commute-advice
+**Endpoint** 
+
+`POST /commute-advice`
 
 ## Example curl request
 ```curl -X POST "http://127.0.0.1:8000/commute-advice" \
