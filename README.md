@@ -171,15 +171,6 @@ The lowest-risk departure is recommended.
 
 ---
 
-## If I had one extra day, I would probably add:
-
-- More advanced route-based forecasting (multiple points between home & office)
-- Persistent caching (Redis)
-- Unit testing for scoring + recommendation logic
-- Deployment support (Docker + cloud hosting)
-
----
-
 ## Author
 
 Hi, I’m **Saksham Raj**  
